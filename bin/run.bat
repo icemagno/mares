@@ -1,0 +1,1 @@
+java -jar mare-1.0.war

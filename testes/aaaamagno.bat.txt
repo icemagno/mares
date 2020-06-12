@@ -1,0 +1,11 @@
+// Gerar Arquivo de constantes:
+anhar 4 256 636 c:\magno\anhar\chm\testes\constantes.txt
+
+
+// Gerar alturas
+anhar 3 256 400 01/01/2018 31/01/2018 c:\magno\anhar\alturas.txt
+
+
+// Previsao
+anhar 5 256 50140 c:\magno\anhar\ 2017 C:\Magno\anhar\constantes-tabua-2017.txt
+

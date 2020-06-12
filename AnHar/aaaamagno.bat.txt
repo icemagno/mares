@@ -1,0 +1,7 @@
+// Gerar Arquivo de constantes:
+anhar 4 256 636 c:\magno\anhar\constantes.txt
+
+
+// Gerar alturas
+anhar 3 256 400 01/01/2018 31/01/2018 c:\magno\anhar\alturas.txt
+

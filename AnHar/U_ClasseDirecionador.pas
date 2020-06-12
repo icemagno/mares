@@ -1,0 +1,100 @@
+unit U_ClasseDirecionador;
+
+interface
+
+uses U_ClasseAnaliseHarmonicaSis, U_ClassePrevisaoSis, U_Magno, SysUtils;
+
+type
+  TDirecionador = class
+  private
+  public
+    procedure CarregaFasesLua( Ano: Word; Fuso: Smallint; ArquivoFases: string);
+    procedure analiseHarmonica(ArqAlt, ArqAh, ArqConst: string);
+    procedure previsao(ArqConst, ArqPrev: string; DataInicial, DataFinal: TDateTime; Z0: Real; TipoSaida : Integer);
+    procedure GeraArqAlturasDll(CodEstacao : Word; CodEqpto : Word; DataIni, DataFim, ArqConst: string);
+    procedure GeraArqConstantesDll( CodEstacao: Word; CodAnalise: integer; Arquivo: string  );
+    procedure geraTabua(CodEstacao: Word; NumEstacao: integer; Diretorio: string; Ano : integer; Constantes : string );
+    procedure geraPrevisaoCombinada( CodEstacao: Word; ano : integer; Diretorio: string );
+  end;
+
+implementation
+
+// Cod. Estacao, Cod Equipamento, Dta inicial, Dta final, Arquivo destino
+procedure TDirecionador.GeraArqAlturasDll( CodEstacao : Word; CodEqpto : Word; DataIni, DataFim, ArqConst: string );
+var MG : TMagno;
+begin
+  MG := TMagno.Create();
+  MG.GeraArqAlturasDll( CodEstacao, CodEqpto, DataIni, DataFim, ArqConst );
+end;
+
+
+// Cod Estacao, Cod Equipamento, Arquivo destino
+procedure TDirecionador.GeraArqConstantesDll( CodEstacao: Word; CodAnalise: integer; Arquivo: string  );
+var MG : TMagno;
+begin
+  MG := TMagno.Create();
+  MG.GeraArqConstantesDll( CodEstacao, CodAnalise, Arquivo );
+end;
+
+procedure TDirecionador.analiseHarmonica(ArqAlt, ArqAh, ArqConst: string);
+var
+  AH: TClasseAnaliseHarmonicaSis;
+begin
+  AH:= TClasseAnaliseHarmonicaSis.create;
+  AH.analiseHarmonica(tAh, ArqAlt, ArqAh, ArqConst);
+end;
+
+
+procedure TDirecionador.CarregaFasesLua( Ano: Word; Fuso: Smallint; ArquivoFases: string);
+var MG : TMagno;
+begin
+  MG := TMagno.Create();
+  MG.CarregaFasesLua(Ano,Fuso,ArquivoFases);
+end;
+
+procedure TDirecionador.geraTabua(CodEstacao: Word; NumEstacao: integer; Diretorio: string; Ano : integer; Constantes : string );
+var MG : TMagno;
+begin
+  MG := TMagno.Create();
+  MG.geraTabua( CodEstacao, NumEstacao, Diretorio, Ano, Constantes);
+end;
+
+
+
+
+
+// *********************************************************************
+// Eh isso que me interessa
+// *********************************************************************
+
+// anhar 6 256 2017 C:\Magno\anhar\chm\testes\
+
+procedure TDirecionador.geraPrevisaoCombinada( CodEstacao: Word; ano : integer; Diretorio: string );
+var MG : TMagno;
+    arqConst : String;
+begin
+  MG := TMagno.Create();
+  //MG.geraTabua( 256, 50140, 'C:\Magno\anhar\chm\testes\', 2017, 'C:\Magno\anhar\chm\testes\constantes-tabua.txt');
+  //MG.CarregaFasesLua(2020,3,'C:\Magno\anhar\chm\testes\faseslua.txt');
+  arqConst := Diretorio + 'constantes_' + IntToStr( CodEstacao ) + '.txt';
+  MG.previsaoColunas(CodEstacao,EncodeDate(ano,01,01),EncodeDate(ano,12,31),Diretorio,1,arqConst);
+  MG.previsaoColunas(CodEstacao,EncodeDate(ano,01,01),EncodeDate(ano,12,31),Diretorio,2,arqConst);
+end;
+
+// *********************************************************************
+// *********************************************************************
+// *********************************************************************
+
+
+
+
+procedure TDirecionador.previsao(ArqConst, ArqPrev: string; DataInicial,
+  DataFinal: TDateTime; Z0: Real; TipoSaida : Integer);
+var
+  Prev: TClassePrevisaoSis;
+begin
+  Prev:= TClassePrevisaoSis.create;
+  Prev.previsaoColunas(DataInicial, DataFinal, Z0, ArqConst, ArqPrev, TipoSaida);
+end;
+
+end.

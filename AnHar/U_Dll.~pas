@@ -1,0 +1,18 @@
+unit U_Dll;
+
+interface
+
+procedure ANALISE(var arq_alt, arq_const, arq_reduc, arq_relat, arq_13_ciclos, arq_9_ciclos, klm1, cons, niveis, del, data_imp: array of char); stdcall external 'ROTINAS_MARE_ANALISE.dll';
+procedure NIMED(var arq_alt, filtro, listagem, deleta, grava, arq_cotas, dia_anter, dia_poster, arq_impre, data_imp: array of char); stdcall external 'ROTINAS_MARE_ANALISE.dll';
+procedure PREVISAO(var arq_const, arq_prev, tipo, di, mi, ai, df, mf, af, nivel, op, sim, data_relatorio: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure PREVISAO_ALTURAS_EXCEL(var arq_const, arq_prev, tipo, di, mi, ai, df, mf, af, nivel, op: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure PREVISAO_MAXMIN_EXCEL(var arq_const, arq_prev, tipo, di, mi, ai, df, mf, af, nivel, op, sim: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure PREVISAO_DISQUETE(var arq_const, arq_prev_alt, arq_prev_maxmin, tipo, di, mi, ai, df, mf, af, nivel, op: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure TABUA(arq_const, arq_porto, arq_tabua, carta, instituicao, nome_porto, ano_tabua: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure TABUA_IMP(arq_const, arq_imp, arq_temp, carta, instituicao, nome_porto, ano_tabua: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure PREVISAO19ANOS(ArquivoConst, ArquivoSaida, tipo, dd1, mm1, aa1, dd2, mm2, aa2, nivel, op: array of char); stdcall external 'ROTINAS_MARE_PREVISAO.dll';
+procedure AnaliseHarmonicaMares(ArqDados, PathArqDados, NumAmostras, NumEspecies, CiclosDia, ProbRejeicao, ArqConst, PathArqConst, EspecAmplit, PathArqAnalise, ArqAnalise, PathModulos: string); stdcall external 'DLL_ROTINAS_PACMARE_AH.dll';
+
+implementation
+
+end.

@@ -1,0 +1,207 @@
+{
+Biblioteca de funções
+}
+
+unit BbtFuncoes;
+
+interface
+
+uses
+  SysUtils, DateUtils;
+
+function alterarCaracter(St: string; Procura, Substitui: Char): string;
+function validaDataHora(DataHora: string): Boolean;
+function geraEspacosString(St: string; TamTotal: Word;
+  Direita: Boolean): string;
+function diferencaPeriodo(DataInicial, DataFinal: TDateTime;
+  TipoRetorno: Byte): Integer;
+function getParametro(St: string; Separador: Char; Pos: Byte): string;
+function testaStr(vSt, vTeste, vRetorno: string): string;
+function retornaParametroPosString(St: string; PosParametro: Byte;
+  Separador: Char): string;
+function contaLinhasArquivo(Arquivo: string): Integer;
+
+implementation
+
+function alterarCaracter(St: string; Procura, Substitui: Char): string;
+{Função para substituir um caracter dentro de uma string. Substitui
+todas as ocorrências do caracter alvo.}
+var
+  TextoAux: string;
+  I, TamTexto: Integer;
+begin
+  TextoAux:= '';
+  TamTexto:= Length(St);
+  for I:= 1 to TamTexto do
+    begin
+      if (St[I] = Procura) then
+        TextoAux:= TextoAux + Substitui
+      else
+        TextoAux:= TextoAux + St[I];
+    end;
+  Result:= TextoAux;
+end;
+
+function validaDataHora(DataHora: string): Boolean;
+{Valida uma string com DataHora.}
+begin
+  try
+    StrToDateTime(DataHora);
+    Result:= True;
+  except
+    Result:= False;
+  end;
+end;
+
+function geraEspacosString(St: string; TamTotal: Word;
+  Direita: Boolean): string;
+var
+  StAux: string;
+  I, MaxSt: Word;
+begin
+  StAux:= '';
+  if (Length(St) <> 0) then
+    begin
+      if (Length(St) <= TamTotal) then
+        MaxSt:= Length(St)
+      else
+        MaxSt:= TamTotal;
+      for I:= 1 to MaxSt do
+        StAux:= StAux + St[I];
+    end;
+  if (Length(StAux) < TamTotal) then
+    begin
+      for I:= (Length(StAux)+1) to TamTotal do
+        begin
+          if (Direita) then
+            StAux:= StAux + ' '
+          else
+            StAux:= ' ' + StAux;
+        end;
+    end;
+  Result:= StAux;
+end;
+
+function diferencaPeriodo(DataInicial, DataFinal: TDateTime;
+  TipoRetorno: Byte): Integer;
+{Objetivo: Função para retornar a diferença entre períodos.
+"DataInicial" deve ser sempre menor do que DataFinal.
+Tipo do retorno:
+1 - em minutos;
+2 - em horas;
+3 - em dias.
+}
+begin
+  if ((DataInicial > DataFinal) or (TipoRetorno = 0) or (TipoRetorno > 3)) then
+    Result:= -1
+  else
+    begin
+      case (TipoRetorno) of
+        1: Result:= MinutesBetween(DataInicial, DataFinal);
+        2: Result:= HoursBetween(DataInicial, DataFinal);
+        3: Result:= DaysBetween(DataInicial, DataFinal);
+      else
+        Result:= MinutesBetween(DataInicial, DataFinal);
+      end;
+    end;
+end;
+
+function getParametro(St: string; Separador: Char; Pos: Byte): string;
+var
+  I, TamSt, ContSep, ContSepAux: Integer;
+  StAux: string;
+begin
+  TamSt:= Length(St);
+  I:= 1;
+  ContSep:= 0;
+  while (I <= TamSt) do
+    begin
+      if (St[I] = Separador) then
+        ContSep:= ContSep+1;
+      I:= I+1;
+    end;
+  if ((ContSep > 0) and (Pos <= (ContSep+1))) then
+    begin
+      StAux:= '';
+      I:= 1;
+      ContSepAux:= 1;
+      while (I <= TamSt) do
+        begin
+          if (St[I] <> Separador) then
+            begin
+              StAux:= StAux + St[I];
+              I:= I+1;
+            end
+          else
+            begin
+              if (ContSepAux = Pos) then
+                Break
+              else
+                begin
+                  I:= I+1;
+                  ContSepAux:= ContSepAux+1;
+                  StAux:= '';
+                end;
+            end;
+        end;
+      Result:= StAux;
+    end
+  else
+    Result:= '';
+end;
+
+function testaStr(vSt, vTeste, vRetorno: string): string;
+begin
+  if (vSt = vTeste) then
+    Result:= vRetorno
+  else
+    Result:= vSt;
+end;
+
+function retornaParametroPosString(St: string; PosParametro: Byte;
+  Separador: Char): string;
+var
+  TamString, ContChar, ContParametro: Integer;
+  StAux: string;
+begin
+  TamString:= Length(St);
+  ContChar:= 1;
+  ContParametro:= 1;
+  if ((TamString > 0) and (PosParametro > 0)) then
+    begin
+      while (ContParametro <= PosParametro) do
+        begin
+          StAux:= '';
+          while ((St[ContChar] <> Separador) and (ContChar <= TamString)) do
+            begin
+              StAux:= StAux + St[ContChar];
+              ContChar:= ContChar + 1;
+            end;
+          ContChar:= ContChar + 1;
+          ContParametro:= ContParametro + 1;
+        end;
+      Result:= StAux;
+    end
+  else
+    Result:= '';
+end;
+
+function contaLinhasArquivo(Arquivo: string): Integer;
+var
+  Arq: TextFile;
+  Linha: string;
+  Cont: Integer;
+begin
+  Cont:= 0;
+  AssignFile(Arq, Arquivo);
+  Reset(Arq);
+  while not (Eof(Arq)) do
+    begin
+      Readln(Arq, Linha);
+      Cont:= Cont + 1;
+    end;
+  CloseFile(Arq);
+  Result:= Cont;
+end;
+
+end.
