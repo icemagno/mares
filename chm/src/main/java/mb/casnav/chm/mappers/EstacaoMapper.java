@@ -23,8 +23,6 @@ public final class EstacaoMapper implements RowMapper<Estacao>{
 		md.setInstituicao( rs.getString("instituicao") );
 		md.setNumAna( rs.getString("num_ana") );
 		md.setFluviometrica( rs.getString("fluviometrica") );
-		
-		
 		return md;
 	}
 
